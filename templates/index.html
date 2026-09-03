@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    .container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    background-color: black;
+    padding: 1px;
+    margin-bottom: 30px;
+}
+    .container div {
+        background-color: rgb(65, 64, 64);
+        padding: 5px;
+        margin: 5px;
+        color: white;
+    }
+    .container2 {
+        display: grid;
+        grid-template-columns: auto auto;
+        padding: 1px;
+        outline: 1px solid black;
+    }
+    .container2 div {
+        padding: 10px;
+        margin: 1px;
+        background-color: rgb(0, 0, 0);
+    }
+   .container3 {
+    display: grid;
+    grid-template-columns: auto;
+    padding: 1px;
+    outline: 1px solid black;
+    margin-top: 20px;
+}
+    .container3 div {
+        padding: 10px;
+        margin: 1px;
+        background-color: rgb(0, 0, 0);
+    }
+    .grid-cell {
+        color: white;
+        text-align: center;
+    }
+    .water-track {
+    height: 20px;
+    background-color: rgb(72, 72, 72);
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+    .water-fill
+    {
+        height: 100%;
+        background-color: rgb(0, 0, {{blue_value}});
+    }
+    input[type="checkbox"] {
+    width: 35px;
+    height: 35px;
+    accent-color: #2f6f4f;
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-top: 15px;
+    outline: .05px solid white; 
+    }
+    input[type="checkbox"]:hover{
+        transform: scale(1.04);
+    }
+    .water-buttons {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+.water-buttons form {
+    flex: 1;
+}
+ .water-buttons button {
+    background-color: #141414;
+    border: 1px solid #555;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+    height: 50px;
+    width: 97%;
+    margin-bottom: 15px;
+}
+
+.water-buttons button:hover {
+    background-color: #333;
+    transform: scale(1.01);
+}
+
+.cup-plus {
+    color: #2f6f4f;
+}
+
+.cup-plus:hover {
+    background-color: #2f6f4f;
+    border-color: #2f6f4f;
+}
+
+.cup-minus {
+    color:#7a3b3b
+}
+
+.cup-minus:hover {
+    background-color: #7a3b3b;
+    border-color: #7a3b3b;
+}
+
+.symbol2{
+    font-size: 50px;
+    font-weight: 900;
+    line-height: .6;
+}
+.symbol1{
+    font-size: 70px;
+    font-weight: 900;
+    line-height: .3;
+}
+
+body {
+    background-color: #1a1a1a;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+h1 {
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+p {
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.habit-row.done {
+    background-color: rgba(47, 111, 79, 0.15);
+    
+}
+.habit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #555;
+    border-radius: 1px;
+    padding: 10px 10px;
+    margin-bottom: 5px;
+}
+
+</style>
+</head>
+<body>
+
+    <h1>Habit Tracker</h1>
+<div class="container">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+        <div>8</div>
+        <div>9</div>
+        <div>10</div>
+        <div>11</div>
+        <div>12</div>
+        <div>13</div>
+        <div>14</div>
+        <div>15</div>
+        <div>16</div>
+        <div>17</div>
+        <div>18</div>
+        <div>19</div>
+        <div>20</div>
+        <div>21</div>
+        <div>22</div>
+        <div>23</div>
+        <div>24</div>
+        <div>25</div>
+        <div>26</div>
+        <div>27</div>
+        <div>28</div>
+        <div>29</div>
+        <div>30</div>
+        <div>31</div>
+    </div>
+
+     <h1>Water: {{ water_total }}/8 cups</h1>
+    
+         <div class="water-track">
+             <div class = "water-fill" style="width: {{percentage}}%;">         
+             </div>
+         </div>
+
+    <div class="water-buttons" style="display:flex; gap:10px;">
+    <form action="/log/water/subtract" method="POST" class="water-row">
+        <button class="cup-minus" type="submit"><span class="symbol1">-</span></button>
+    </form>
+    <form action="/log/water/add" method="POST">
+        <button class="cup-plus" type="submit"><span class="symbol2">+</span></button>
+    </form>
+    
+    </div>
+
+    <h1>
+        Habits TO-DO
+    </h1>
+    
+    
+    <form action="/log/workout/toggle" method="POST" class="habit-row {% if workout_done %}done{% endif %}">
+   <input type="checkbox" {% if workout_done %}checked{% endif %} onchange="this.form.submit()" > <p>Workout</p>
+</form>
+  
+    <form action="/log/multivitamin/toggle" method="POST" class="habit-row {% if multivitamin_done %}done{% endif %}">
+        <input type="checkbox" {% if multivitamin_done %}checked{% endif %} onchange="this.form.submit()"> <p>Multivitamin</p>
+    </form>
+
+
+</body>
+</html>
