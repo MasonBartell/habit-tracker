@@ -41,18 +41,8 @@ def home():
     multivitamin_id = cursor.fetchone()[0]
 
     cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, today))
-    water_total = cursor.fetchone()[0]
+    water_total = int(cursor.fetchone()[0])
     if water_total is None: water_total = 0
-    
-    # Add up every logged water value for today.
-    # The ? marks are placeholders — Python safely inserts
-    # water_id and today into the query instead of pasting them
-    # directly into the SQL string (this avoids SQL injection).
-    for day in dateList:
-        cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, day))
-        water_total = cursor.fetchone()[0]
-        if water_total is None: water_total = 0
-        print(day,water_total)
 
     cursor.execute('SELECT * FROM logs WHERE Habit_ID = ? AND Date = ?', (workout_id, today))
     workout_row = cursor.fetchone()
@@ -63,6 +53,31 @@ def home():
     multivitamin_row = cursor.fetchone()
     if multivitamin_row is None: multivitamin_done = False
     else: multivitamin_done = True
+
+    
+    for day in dateList:
+        cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, day))
+        day_water_total = cursor.fetchone()[0]
+        if day_water_total is None: day_water_total = 0
+
+        cursor.execute('SELECT * FROM logs WHERE Habit_ID = ? AND Date = ?', (workout_id, day))
+        workout_row = cursor.fetchone()
+        if workout_row is None: day_workout_done = False
+        else: day_workout_done = True
+
+        cursor.execute('SELECT * FROM logs WHERE Habit_ID = ? AND Date = ?', (multivitamin_id, day))
+        multivitamin_row = cursor.fetchone()
+        if multivitamin_row is None: day_multivitamin_done = False
+        else: day_multivitamin_done = True
+
+        dayTotal = 0
+        if day_water_total == 8:
+            dayTotal += 1
+        if day_workout_done:
+            dayTotal += 1
+        if day_multivitamin_done:
+            dayTotal += 1
+        gridData.append((day, dayTotal))
 
 
     cursor.execute('SELECT GOAL FROM habits WHERE Name = "Water" ')
@@ -79,7 +94,7 @@ def home():
 
     # Pass both habits and water_total into the template so
     # the HTML file can actually use them.
-    return render_template("index.html", habits=habits, water_total=water_total, percentage=percentage, blue_value=blue_value, workout_done=workout_done, multivitamin_done=multivitamin_done)
+    return render_template("index.html", habits=habits, water_total=water_total, percentage=percentage, blue_value=blue_value, workout_done=workout_done, multivitamin_done=multivitamin_done,gridData=gridData)
 
 @app.route("/log/water/add", methods=["POST"])
 def add_water():
