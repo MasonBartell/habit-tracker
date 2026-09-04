@@ -1,5 +1,5 @@
 import sqlite3
-from datetime import date
+import datetime as dt
 from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
@@ -11,6 +11,7 @@ def home():
     conn = sqlite3.connect("habits.db")
     cursor = conn.cursor()
 
+    
     # Get every row from the habits table.
     # fetchall() returns a list of tuples, one tuple per row,
     # in the order the columns were defined: (ID, Name, Type, Goal).
@@ -19,8 +20,13 @@ def home():
 
     # Get today's date as a Python date object, so we can filter
     # the logs table down to just today's entries.
-    today = date.today()
+    today = dt.date.today()
+    dateList = []
+    gridData = []
 
+    for i in range(14):
+        dateList.append(today - dt.timedelta(i))
+    dateList.reverse() 
     # Look up Water's ID by name instead of hardcoding "3" —
     # this way it still works even if the habits table changes later.
     # fetchone() returns a single row (not a list), so [0] grabs
@@ -33,15 +39,20 @@ def home():
 
     cursor.execute('SELECT ID FROM habits Where Name = "Multivitamin"')
     multivitamin_id = cursor.fetchone()[0]
+
+    cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, today))
+    water_total = cursor.fetchone()[0]
+    if water_total is None: water_total = 0
     
     # Add up every logged water value for today.
     # The ? marks are placeholders — Python safely inserts
     # water_id and today into the query instead of pasting them
     # directly into the SQL string (this avoids SQL injection).
-    cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, today))
-    water_total = cursor.fetchone()[0]
-    if water_total is None: water_total = 0
-    water_total = int(water_total)
+    for day in dateList:
+        cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, day))
+        water_total = cursor.fetchone()[0]
+        if water_total is None: water_total = 0
+        print(day,water_total)
 
     cursor.execute('SELECT * FROM logs WHERE Habit_ID = ? AND Date = ?', (workout_id, today))
     workout_row = cursor.fetchone()
@@ -59,10 +70,7 @@ def home():
     percentage = min((water_total/goal_value) * 100,100)
     blue_value = int(255 - (percentage*1.5))
     
-    # SUM() returns None (not 0) if there are no matching rows yet —
-    # since logs is still empty, we catch that and default to 0.
-    if water_total is None:
-        water_total = 0
+    
 
 
     # Only close the connection once every query is finished —
@@ -81,7 +89,7 @@ def add_water():
     conn = sqlite3.connect("habits.db")
     cursor = conn.cursor()
  # get today's date, same as before
-    today = date.today()
+    today = dt.date.today()
     # Step 2: find water's ID, same as you did in home()
     cursor.execute('SELECT ID FROM habits WHERE Name = "Water"')
     water_id = cursor.fetchone()[0]
@@ -119,7 +127,7 @@ def subtract_water():
     cursor.execute('SELECT ID FROM habits WHERE Name = "Water"')
     water_id = cursor.fetchone()[0]
 
-    today = date.today()
+    today = dt.date.today()
 
     cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, today))
     water_total = cursor.fetchone()[0]
@@ -142,7 +150,7 @@ def toggle_workout():
     conn = sqlite3.connect("habits.db")
     cursor = conn.cursor()
 
-    today = date.today()
+    today = dt.date.today()
 
     cursor.execute('SELECT ID FROM habits Where Name = "Workout"')
     workout_id = cursor.fetchone()[0]
@@ -168,7 +176,7 @@ def toggle_multivitamin():
     conn = sqlite3.connect("habits.db")
     cursor = conn.cursor()
     
-    today = date.today()
+    today = dt.date.today()
 
     cursor.execute('SELECT ID FROM habits Where Name = "Multivitamin"')
     multivitamnin_id = cursor.fetchone()[0]
