@@ -1,7 +1,7 @@
 import sqlite3
 import datetime as dt
 from flask import Flask, render_template, redirect, url_for
-
+from flask import request
 app = Flask(__name__)
 
 @app.route("/")
@@ -211,6 +211,22 @@ def toggle_multivitamin():
 
     return redirect(url_for("home"))
 
+@app.route('/habit/add', methods=['POST'])
+def add_habit():
+
+    conn = sqlite3.connect("habits.db")
+    cursor = conn.cursor()
+
+    habit_name = request.form["habit_name"]
+    cursor.execute("SELECT COUNT(*) FROM habits")
+    habit_count = cursor.fetchone()[0]
+    if habit_count < 4:
+        cursor.execute("INSERT INTO habits (Name, Type, Goal) VALUES (?, ?, ?)", (habit_name, "Checkbox", None))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for("home"))
 
 
 if __name__ == "__main__":
