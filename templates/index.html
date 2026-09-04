@@ -2,136 +2,149 @@
 <html>
 <head>
 <style>
+    :root {
+        --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+        background-color: #1a1a1a;
+        color: white;
+        font-family: var(--font-main);
+    }
+
+    h1 {
+        margin-top: 20px;
+        margin-bottom: 25px;
+    }
+
+    p {
+        color: white;
+        font-family: var(--font-main);
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 1;
+        margin: 0;
+    }
+
+    /* Consistency grid */
     .container {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: black;
-    padding: 1px;
-    margin-bottom: 30px;
-}
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 6px;
+        background-color: black;
+        padding: 6px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
     .container div {
-        background-color: rgb(65, 64, 64);
         padding: 15px;
-        margin: 5px;
         color: white;
         font-weight: 800;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
-    }
-    .grid-cell {
-        color: white;
+        font-family: var(--font-main);
+        border-radius: 6px;
         text-align: center;
+        transition: transform 0.15s ease;
     }
+
+    .container div:hover {
+        transform: scale(1.03);
+    }
+
+    /* Water tracker */
     .water-track {
-    height: 20px;
-    background-color: rgb(72, 72, 72);
-    border-radius: 14px;
-    margin-bottom: 20px;
-}
-    .water-fill
-    {
+        height: 20px;
+        background-color: rgb(72, 72, 72);
+        border-radius: 14px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .water-fill {
         height: 100%;
-        background-color: rgb(0, 0, {{blue_value}});
+        background-color: rgb(0, 0, {{ blue_value }});
+        transition: width 0.2s ease;
     }
-    input[type="checkbox"] {
-    width: 35px;
-    height: 35px;
-    accent-color: #2f6f4f;
-    cursor: pointer;
-    margin-bottom: 20px;
-    margin-top: 15px;
-    outline: .05px solid white; 
-    }
-    input[type="checkbox"]:hover{
-        transform: scale(1.04);
-    }
+
     .water-buttons {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-    margin-bottom: 30px;
-}
-.water-buttons form {
-    flex: 1;
-}
- .water-buttons button {
-    background-color: #141414;
-    border: 1px solid #555;
-    border-radius: 6px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.15s ease, transform 0.15s ease;
-    height: 50px;
-    width: 97%;
-    margin-bottom: 15px;
-}
+        display: flex;
+        width: 100%;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
 
-.water-buttons button:hover {
-    background-color: #333;
-    transform: scale(1.01);
-}
+    .water-buttons form {
+        flex: 1;
+    }
 
-.cup-plus {
-    color: #2f6f4f;
-}
+    .water-buttons button {
+        background-color: #141414;
+        border: 1px solid #555;
+        border-radius: 6px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.15s ease, transform 0.15s ease;
+        height: 50px;
+        width: 100%;
+    }
 
-.cup-plus:hover {
-    background-color: #2f6f4f;
-    border-color: #2f6f4f;
-}
+    .water-buttons button:hover {
+        background-color: #333;
+        transform: scale(1.02);
+    }
 
-.cup-minus {
-    color:#7a3b3b
-}
+    .cup-plus { color: #2f6f4f; }
+    .cup-plus:hover {
+        background-color: #2f6f4f;
+        border-color: #2f6f4f;
+    }
 
-.cup-minus:hover {
-    background-color: #7a3b3b;
-    border-color: #7a3b3b;
-}
+    .cup-minus { color: #7a3b3b; }
+    .cup-minus:hover {
+        background-color: #7a3b3b;
+        border-color: #7a3b3b;
+    }
 
-.symbol2{
-    font-size: 50px;
-    font-weight: 900;
-    line-height: .6;
-}
-.symbol1{
-    font-size: 70px;
-    font-weight: 900;
-    line-height: .3;
-}
+    .symbol {
+        display: inline-block;
+        font-size: 26px;
+        font-weight: 900;
+        line-height: 1;
+    }
 
-body {
-    background-color: #1a1a1a;
-    color: white;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-h1 {
-    margin-top: 20px;
-    margin-bottom: 25px;
-}
-p {
-    color: white;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 1;
-}
+    /* Habit checkboxes */
+    input[type="checkbox"] {
+        width: 28px;
+        height: 28px;
+        accent-color: #2f6f4f;
+        cursor: pointer;
+        outline: 1px solid white;
+        flex-shrink: 0;
+    }
 
-.habit-row.done {
-    background-color: rgba(47, 111, 79, 0.15);
-    
-}
-.habit-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 2px solid #555;
-    border-radius: 1px;
-    padding: 10px 10px;
-    margin-bottom: 5px;
+    input[type="checkbox"]:hover {
+        transform: scale(1.05);
+    }
 
-}
+    .habit-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 2px solid #555;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 10px;
+        transition: background-color 0.15s ease;
+    }
 
+    .habit-row:hover {
+        background-color: #222;
+    }
+
+    .habit-row.done {
+        background-color: rgba(47, 111, 79, 0.15);
+        border-color: #2f6f4f;
+    }
 </style>
 </head>
 <body>
@@ -139,41 +152,38 @@ p {
     <h1>Habit Tracker</h1>
     <div class="container">
     {% for day, score in gridData %}
-    <div  style="background-color: {% if score == 0 %}#414040{% elif score == 1 %}#2e4a3a{% elif score == 2 %}#3d8058{% else %}#4caf7a{% endif %};">{{ day.strftime("%m/%d") }}
-    </div>
+        <div style="background-color: {% if score == 0 %}#414040{% elif score == 1 %}#2e4a3a{% elif score == 2 %}#3d8058{% else %}#4caf7a{% endif %};">
+            {{ day.strftime("%m/%d") }}
+        </div>
     {% endfor %}
     </div>
 
-     <h1>Water: {{ water_total }}/8 cups</h1>
-    
-         <div class="water-track">
-             <div class = "water-fill" style="width: {{percentage}}%;">         
-             </div>
-         </div>
+    <h1>Water: {{ water_total }}/8 cups</h1>
 
-    <div class="water-buttons" style="display:flex; gap:10px;">
-    <form action="/log/water/subtract" method="POST" class="water-row">
-        <button class="cup-minus" type="submit"><span class="symbol1">-</span></button>
-    </form>
-    <form action="/log/water/add" method="POST">
-        <button class="cup-plus" type="submit"><span class="symbol2">+</span></button>
-    </form>
-    
+    <div class="water-track">
+        <div class="water-fill" style="width: {{ percentage }}%;"></div>
     </div>
 
-    <h1>
-        Habits TO-DO
-    </h1>
-    
-    
+    <div class="water-buttons">
+        <form action="/log/water/subtract" method="POST">
+            <button class="cup-minus" type="submit"><span class="symbol">&minus;</span></button>
+        </form>
+        <form action="/log/water/add" method="POST">
+            <button class="cup-plus" type="submit"><span class="symbol">+</span></button>
+        </form>
+    </div>
+
+    <h1>Habits TO-DO</h1>
+
     <form action="/log/workout/toggle" method="POST" class="habit-row {% if workout_done %}done{% endif %}">
-   <input type="checkbox" {% if workout_done %}checked{% endif %} onchange="this.form.submit()" > <p>Workout</p>
-</form>
-  
-    <form action="/log/multivitamin/toggle" method="POST" class="habit-row {% if multivitamin_done %}done{% endif %}">
-        <input type="checkbox" {% if multivitamin_done %}checked{% endif %} onchange="this.form.submit()"> <p>Multivitamin</p>
+        <input type="checkbox" {% if workout_done %}checked{% endif %} onchange="this.form.submit()">
+        <p>Workout</p>
     </form>
 
+    <form action="/log/multivitamin/toggle" method="POST" class="habit-row {% if multivitamin_done %}done{% endif %}">
+        <input type="checkbox" {% if multivitamin_done %}checked{% endif %} onchange="this.form.submit()">
+        <p>Multivitamin</p>
+    </form>
 
 </body>
 </html>
