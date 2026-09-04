@@ -4,39 +4,19 @@
 <style>
     .container {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     background-color: black;
     padding: 1px;
     margin-bottom: 30px;
 }
     .container div {
         background-color: rgb(65, 64, 64);
-        padding: 5px;
+        padding: 15px;
         margin: 5px;
         color: white;
-    }
-    .container2 {
-        display: grid;
-        grid-template-columns: auto auto;
-        padding: 1px;
-        outline: 1px solid black;
-    }
-    .container2 div {
-        padding: 10px;
-        margin: 1px;
-        background-color: rgb(0, 0, 0);
-    }
-   .container3 {
-    display: grid;
-    grid-template-columns: auto;
-    padding: 1px;
-    outline: 1px solid black;
-    margin-top: 20px;
-}
-    .container3 div {
-        padding: 10px;
-        margin: 1px;
-        background-color: rgb(0, 0, 0);
+        font-weight: 800;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
     }
     .grid-cell {
         color: white;
@@ -149,6 +129,7 @@ p {
     border-radius: 1px;
     padding: 10px 10px;
     margin-bottom: 5px;
+
 }
 
 </style>
@@ -156,38 +137,11 @@ p {
 <body>
 
     <h1>Habit Tracker</h1>
-<div class="container">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        <div>6</div>
-        <div>7</div>
-        <div>8</div>
-        <div>9</div>
-        <div>10</div>
-        <div>11</div>
-        <div>12</div>
-        <div>13</div>
-        <div>14</div>
-        <div>15</div>
-        <div>16</div>
-        <div>17</div>
-        <div>18</div>
-        <div>19</div>
-        <div>20</div>
-        <div>21</div>
-        <div>22</div>
-        <div>23</div>
-        <div>24</div>
-        <div>25</div>
-        <div>26</div>
-        <div>27</div>
-        <div>28</div>
-        <div>29</div>
-        <div>30</div>
-        <div>31</div>
+    <div class="container">
+    {% for day, score in gridData %}
+    <div  style="background-color: {% if score == 0 %}#414040{% elif score == 1 %}#2e4a3a{% elif score == 2 %}#3d8058{% else %}#4caf7a{% endif %};">{{ day.strftime("%m/%d") }}
+    </div>
+    {% endfor %}
     </div>
 
      <h1>Water: {{ water_total }}/8 cups</h1>
