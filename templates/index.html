@@ -177,6 +177,9 @@
     <form action="/habit/add" method="POST">
          <input type="text" name="habit_name"> <button type="submit">Submit</button>
     </form>
+    <form action="/habit/delete/5" method="POST">
+    <button type="submit">Delete Habit 5</button>
+</form>
     
 
     <form action="/log/workout/toggle" method="POST" class="habit-row {% if workout_done %}done{% endif %}">

@@ -41,9 +41,9 @@ def home():
     multivitamin_id = cursor.fetchone()[0]
 
     cursor.execute('SELECT SUM(value) FROM logs WHERE Habit_ID = ? AND Date = ?', (water_id, today))
-    water_total = int(cursor.fetchone()[0])
+    water_total = cursor.fetchone()[0]
     if water_total is None: water_total = 0
-
+    water_total = int(water_total)
     cursor.execute('SELECT * FROM logs WHERE Habit_ID = ? AND Date = ?', (workout_id, today))
     workout_row = cursor.fetchone()
     if workout_row is None: workout_done = False
@@ -220,13 +220,26 @@ def add_habit():
     habit_name = request.form["habit_name"]
     cursor.execute("SELECT COUNT(*) FROM habits")
     habit_count = cursor.fetchone()[0]
-    if habit_count < 4:
+    if habit_count < 5:
         cursor.execute("INSERT INTO habits (Name, Type, Goal) VALUES (?, ?, ?)", (habit_name, "Checkbox", None))
 
     conn.commit()
     conn.close()
 
     return redirect(url_for("home"))
+
+@app.route('/habit/delete/<int:habit_id>', methods=['POST'])
+def delete_habit(habit_id):
+    conn = sqlite3.connect('habits.db')
+    cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM logs WHERE Habit_ID = ?', (habit_id,))
+    cursor.execute('DELETE FROM habits WHERE ID = ?', (habit_id,))
+
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
