@@ -151,11 +151,11 @@
 
     <h1>Habit Tracker</h1>
     <div class="container">
-    {% for day, score in gridData %}
-        <div style="background-color: {% if score == 0 %}#414040{% elif score == 1 %}#2e4a3a{% elif score == 2 %}#3d8058{% else %}#4caf7a{% endif %};">
-            {{ day.strftime("%m/%d") }}
-        </div>
-    {% endfor %}
+    {% for day, day_color in gridData %}
+    <div style="background-color: {{ day_color }};">
+        {{ day.strftime("%m/%d") }}
+    </div>
+{% endfor %}
     </div>
 
     <h1>Water: {{ water_total }}/8 cups</h1>
@@ -177,20 +177,19 @@
     <form action="/habit/add" method="POST">
          <input type="text" name="habit_name"> <button type="submit">Submit</button>
     </form>
-    <form action="/habit/delete/5" method="POST">
-    <button type="submit">Delete Habit 5</button>
-</form>
+
+   {% for id, name, done in habits_status %}
+    <div class="habit-row {% if done %}done{% endif %}">
+        <form action="/habit/toggle/{{ id }}" method="POST" class="toggle-form">
+            <input type="checkbox" {% if done %}checked{% endif %} onchange="this.form.submit()">
+            <p>{{ name }}</p>
+        </form>
+        <form action="/habit/delete/{{ id }}" method="POST" class="delete-form">
+            <button type="submit" class="delete-btn">&times;</button>
+        </form>
+    </div>
+    {% endfor %}
     
-
-    <form action="/log/workout/toggle" method="POST" class="habit-row {% if workout_done %}done{% endif %}">
-        <input type="checkbox" {% if workout_done %}checked{% endif %} onchange="this.form.submit()">
-        <p>Workout</p>
-    </form>
-
-    <form action="/log/multivitamin/toggle" method="POST" class="habit-row {% if multivitamin_done %}done{% endif %}">
-        <input type="checkbox" {% if multivitamin_done %}checked{% endif %} onchange="this.form.submit()">
-        <p>Multivitamin</p>
-    </form>
 
 </body>
 </html>
