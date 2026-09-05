@@ -145,20 +145,87 @@
         background-color: rgba(47, 111, 79, 0.15);
         border-color: #2f6f4f;
     }
+  
+    .add-habit {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .add-habit input[type="text"] {
+        flex: 1;
+        background-color: #141414;
+        border: 1px solid #555;
+        border-radius: 6px;
+        padding: 12px 14px;
+        color: white;
+        font-family: var(--font-main);
+        font-size: 15px;
+    }
+
+    .add-habit input[type="text"]:focus {
+        outline: none;
+        border-color: #2f6f4f;
+    }
+
+    .add-habit button {
+        background-color: #141414;
+        border: 1px solid #555;
+        border-radius: 6px;
+        padding: 12px 20px;
+        color: white;
+        font-family: var(--font-main);
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+    }
+
+    .add-habit button:hover {
+        background-color: #2f6f4f;
+        border-color: #2f6f4f;
+    }
+
+    .toggle-form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex: 1;
+    }
+
+    .delete-btn {
+        background: none;
+        border: none;
+        color: #7a3b3b;
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 4px 10px;
+        transition: color 0.15s ease;
+    }
+
+    .delete-btn:hover {
+        color: #c0392b;
+    }
+
+    .empty-message {
+        color: #888;
+        font-style: italic;
+        padding: 14px 0;
+    }
 </style>
 </head>
 <body>
 
     <h1>Habit Tracker</h1>
     <div class="container">
-    {% for day, day_color in gridData %}
-    <div style="background-color: {{ day_color }};">
-        {{ day.strftime("%m/%d") }}
-    </div>
-{% endfor %}
+        {% for day, day_color in gridData %}
+            <div style="background-color: {{ day_color }};">
+                {{ day.strftime("%m/%d") }}
+            </div>
+        {% endfor %}
     </div>
 
-    <h1>Water: {{ water_total }}/8 cups</h1>
+    <h1>Water: {{ water_total }}/{{ water_goal }} cups</h1>
 
     <div class="water-track">
         <div class="water-fill" style="width: {{ percentage }}%;"></div>
@@ -174,22 +241,25 @@
     </div>
 
     <h1>Habits TO-DO</h1>
-    <form action="/habit/add" method="POST">
-         <input type="text" name="habit_name"> <button type="submit">Submit</button>
+
+    <form action="/habit/add" method="POST" class="add-habit">
+        <input type="text" name="habit_name" placeholder="Add a new habit...">
+        <button type="submit">Add</button>
     </form>
 
-   {% for id, name, done in habits_status %}
-    <div class="habit-row {% if done %}done{% endif %}">
-        <form action="/habit/toggle/{{ id }}" method="POST" class="toggle-form">
-            <input type="checkbox" {% if done %}checked{% endif %} onchange="this.form.submit()">
-            <p>{{ name }}</p>
-        </form>
-        <form action="/habit/delete/{{ id }}" method="POST" class="delete-form">
-            <button type="submit" class="delete-btn">&times;</button>
-        </form>
-    </div>
+    {% for id, name, done in habits_status %}
+        <div class="habit-row {% if done %}done{% endif %}">
+            <form action="/habit/toggle/{{ id }}" method="POST" class="toggle-form">
+                <input type="checkbox" {% if done %}checked{% endif %} onchange="this.form.submit()">
+                <p>{{ name }}</p>
+            </form>
+            <form action="/habit/delete/{{ id }}" method="POST" class="delete-form">
+                <button type="submit" class="delete-btn">&times;</button>
+            </form>
+        </div>
+    {% else %}
+        <p class="empty-message">No habits yet — add one above to get started.</p>
     {% endfor %}
-    
 
 </body>
 </html>
