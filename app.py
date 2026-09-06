@@ -9,7 +9,6 @@ DB_NAME = os.path.join(BASE_DIR, "habits.db")
 
 app = Flask(__name__)
 
-DB_NAME = "habits.db"
 GRID_DAYS = 14
 MAX_HABITS = 5
 
