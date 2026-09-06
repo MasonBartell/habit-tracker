@@ -2,6 +2,11 @@ import sqlite3
 import datetime as dt
 from flask import Flask, render_template, redirect, url_for, request
 
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "habits.db")
+
 app = Flask(__name__)
 
 DB_NAME = "habits.db"
@@ -183,4 +188,4 @@ def toggle_habit(habit_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
