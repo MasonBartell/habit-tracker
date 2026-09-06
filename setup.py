@@ -1,6 +1,10 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect("habits.db")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_NAME = os.path.join(BASE_DIR, "habits.db")
+
+conn = sqlite3.connect(DB_NAME)
 cursor = conn.cursor()
 
 cursor.execute('''
@@ -21,19 +25,11 @@ cursor.execute('''
     )
 ''')
 
-cursor.execute('''
-    INSERT INTO habits (Name, Type, Goal) VALUES
-    ('Multivitamin', 'Checkbox', NULL)
-''')
-cursor.execute('''
-    INSERT INTO habits (Name, Type, Goal) VALUES
-    ('Workout', 'Checkbox', NULL)
-''')
-cursor.execute('''
-    INSERT INTO habits (Name, Type, Goal) VALUES
-    ('Water', 'Counter', 8)
-''')
-
+cursor.execute('SELECT COUNT(*) FROM habits')
+if cursor.fetchone()[0] == 0:
+    cursor.execute("INSERT INTO habits (Name, Type, Goal) VALUES ('Multivitamin', 'Checkbox', NULL)")
+    cursor.execute("INSERT INTO habits (Name, Type, Goal) VALUES ('Workout', 'Checkbox', NULL)")
+    cursor.execute("INSERT INTO habits (Name, Type, Goal) VALUES ('Water', 'Counter', 8)")
 
 conn.commit()
 conn.close()
